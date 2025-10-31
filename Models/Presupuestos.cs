@@ -1,11 +1,10 @@
-public class Presupuesto
+public class Presupuestos
 {
     private int idPresupuesto;
     private string nombreDestinatario;
     private DateTime fechaCreacion;
     List<PresupuestoDetalle> detalle;
 
-    public Presupuesto() { }
     
     public int IdPresupuesto { get => idPresupuesto; set => idPresupuesto = value; }
     public string NombreDestinatario { get => nombreDestinatario; set => nombreDestinatario = value; }

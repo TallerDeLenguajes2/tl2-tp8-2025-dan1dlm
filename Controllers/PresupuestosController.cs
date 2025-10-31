@@ -4,11 +4,11 @@ using tl2_tp8_2025_dan1dlm.Models;
 
 namespace tl2_tp8_2025_dan1dlm.Controllers;
 
-public class PresupuestoController : Controller
+public class PresupuestosController : Controller
 {
-    private readonly ILogger<PresupuestoController> _logger;
+    private readonly ILogger<PresupuestosController> _logger;
 
-    public PresupuestoController(ILogger<PresupuestoController> logger)
+    public PresupuestosController(ILogger<PresupuestosController> logger)
     {
         _logger = logger;
     }

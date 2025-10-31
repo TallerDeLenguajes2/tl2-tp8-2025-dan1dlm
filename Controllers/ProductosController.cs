@@ -4,11 +4,11 @@ using tl2_tp8_2025_dan1dlm.Models;
 
 namespace tl2_tp8_2025_dan1dlm.Controllers;
 
-public class ProductoController : Controller
+public class ProductosController : Controller
 {
-    private readonly ILogger<ProductoController> _logger;
+    private readonly ILogger<ProductosController> _logger;
 
-    public ProductoController(ILogger<ProductoController> logger)
+    public ProductosController(ILogger<ProductosController> logger)
     {
         _logger = logger;
     }

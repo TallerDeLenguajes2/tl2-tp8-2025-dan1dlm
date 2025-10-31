@@ -1,13 +1,13 @@
 using Microsoft.Data.Sqlite;
 
-public class PresupuestoRepository
+public class PresupuestosRepository
 {
     string connectionString = "Data Source=db/Tienda.db";
 
-    public List<Presupuesto> GetPresupuestos()
+    public List<Presupuestos> GetPresupuestos()
     {
         string queryString = "SELECT idPresupuesto, nombreDestinatario, FechaCreacion FROM Presupuestos";
-        List<Presupuesto> presupuestos = new List<Presupuesto>();
+        List<Presupuestos> presupuestos = new List<Presupuestos>();
 
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -17,7 +17,7 @@ public class PresupuestoRepository
             {
                 while (reader.Read())
                 {
-                    var presupuesto = new Presupuesto
+                    var presupuesto = new Presupuestos
                     {
                         IdPresupuesto = reader.GetInt32(0),
                         NombreDestinatario = reader.GetString(1),
@@ -31,7 +31,7 @@ public class PresupuestoRepository
         return presupuestos;
     }
 
-    public Presupuesto GetPresupuesto(int idPresupuesto)
+    public Presupuestos GetPresupuesto(int idPresupuesto)
     {
         using var conexion = new SqliteConnection(connectionString);
         conexion.Open();
@@ -44,7 +44,7 @@ public class PresupuestoRepository
 
         if (lector.Read())
         {
-            var presupuesto = new Presupuesto
+            var presupuesto = new Presupuestos
             {
                 IdPresupuesto = lector.GetInt32(0),
                 NombreDestinatario = lector.GetString(1),
@@ -61,7 +61,7 @@ public class PresupuestoRepository
         return null;
     }
 
-    public void InsertarPresupuesto(Presupuesto nuevo)
+    public void InsertarPresupuesto(Presupuestos nuevo)
     {
         using var conexion = new SqliteConnection(connectionString);
         conexion.Open();
@@ -76,7 +76,7 @@ public class PresupuestoRepository
         comando.ExecuteNonQuery();
     }
 
-    public void AgregarProductoAPresupuesto(int idPresupuesto, Producto producto, int cantidad)
+    public void AgregarProductoAPresupuesto(int idPresupuesto, Productos producto, int cantidad)
     {
         // Verificar que el presupuesto exista
         var presupuesto = GetPresupuesto(idPresupuesto);
@@ -141,14 +141,14 @@ public class PresupuestoRepository
 
         using var lector = comando.ExecuteReader();
 
-        var productoRepo = new ProductoRepository();
+        var productoRepo = new ProductosRepository();
 
         while (lector.Read())
         {
             int idProducto = lector.GetInt32(1);
             int cantidad = lector.GetInt32(2);
 
-            Producto producto = productoRepo.GetProducto(idProducto);
+            Productos producto = productoRepo.GetProducto(idProducto);
 
             var detalle = new PresupuestoDetalle
             {

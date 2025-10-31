@@ -55,3 +55,4 @@ C:\Users\Alumno\Desktop\tp8-Taller\tl2-tp8-2025-dan1dlm\obj\Debug\net8.0\refint\
 C:\Users\Alumno\Desktop\tp8-Taller\tl2-tp8-2025-dan1dlm\obj\Debug\net8.0\tl2-tp8-2025-dan1dlm.pdb
 C:\Users\Alumno\Desktop\tp8-Taller\tl2-tp8-2025-dan1dlm\obj\Debug\net8.0\tl2-tp8-2025-dan1dlm.genruntimeconfig.cache
 C:\Users\Alumno\Desktop\tp8-Taller\tl2-tp8-2025-dan1dlm\obj\Debug\net8.0\ref\tl2-tp8-2025-dan1dlm.dll
+C:\Users\Alumno\Desktop\tp8-Taller\tl2-tp8-2025-dan1dlm\obj\Debug\net8.0\tl2-tp8-2025-dan1dlm.sourcelink.json

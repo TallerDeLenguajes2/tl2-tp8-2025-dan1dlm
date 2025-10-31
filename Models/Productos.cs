@@ -1,6 +1,6 @@
 using System.IO.Compression;
 
-public class Producto{
+public class Productos{
     private int idProducto;
     private string descripcion;
     private decimal precio;
