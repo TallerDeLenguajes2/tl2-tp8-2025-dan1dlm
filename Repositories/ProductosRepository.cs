@@ -2,10 +2,10 @@ using Microsoft.Data.Sqlite;
 
 public class ProductosRepository
 {
-    string connectionString = "Data Source=db/Tienda.db";
+    string connectionString = "Data Source=Db/Tienda.db";
     public List<Productos> GetProductos()
     {
-        string queryString = "SELECT idProducto, Descripcion, Precio FROM Productos";
+        string queryString = "SELECT * FROM Productos";
         List<Productos> productos = new List<Productos>();
         using (SqliteConnection connection = new SqliteConnection(connectionString))
         {
@@ -17,10 +17,10 @@ public class ProductosRepository
                 {
                     Productos producto = new Productos
                     {
-                        IdProducto = reader.GetInt32(0),               // Columna 0: idProducto
-                        Descripcion = reader.GetString(1),              // Columna 1: Descripcion
+                        IdProducto = reader.GetInt32(0),             
+                        Descripcion = reader.GetString(1),              
                         Precio = reader.GetDecimal(2)
-                    };                  // Columna 2: Precio
+                    };                 
 
                     productos.Add(producto);
                 }

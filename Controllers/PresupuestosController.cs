@@ -6,16 +6,19 @@ namespace tl2_tp8_2025_dan1dlm.Controllers;
 
 public class PresupuestosController : Controller
 {
+    private PresupuestosRepository presupuestosRepository;
     private readonly ILogger<PresupuestosController> _logger;
 
-    public PresupuestosController(ILogger<PresupuestosController> logger)
+     public PresupuestosController(ILogger<PresupuestosController> logger)
     {
+        presupuestosRepository = new PresupuestosRepository();
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        return View();
+        List<Presupuestos> presupuestos = presupuestosRepository.GetPresupuestos();
+        return View(presupuestos);
     }
 
 
@@ -24,4 +27,6 @@ public class PresupuestosController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    
 }

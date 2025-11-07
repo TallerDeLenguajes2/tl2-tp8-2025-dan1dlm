@@ -6,59 +6,106 @@ public class PresupuestosRepository
 
     public List<Presupuestos> GetPresupuestos()
     {
-        string queryString = "SELECT idPresupuesto, nombreDestinatario, FechaCreacion FROM Presupuestos";
-        List<Presupuestos> presupuestos = new List<Presupuestos>();
+        string queryString = "SELECT * FROM Presupuestos LEFT JOIN PresupuestosDetalle using (idPresupuesto) LEFT JOIN Productos using (idProducto)";
+        var presupuestos = new Dictionary<int, Presupuestos>();
 
-        using (var connection = new SqliteConnection(connectionString))
+        using var connection = new SqliteConnection(connectionString);
+
+        connection.Open();
+        using var command = new SqliteCommand(queryString, connection);
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
         {
-            connection.Open();
-            using (var command = new SqliteCommand(queryString, connection))
-            using (var reader = command.ExecuteReader())
+            int idPresupuesto = reader.GetInt32(0);
+
+            if (!presupuestos.ContainsKey(idPresupuesto))
             {
-                while (reader.Read())
+                presupuestos[idPresupuesto] = new Presupuestos
                 {
-                    var presupuesto = new Presupuestos
-                    {
-                        IdPresupuesto = reader.GetInt32(0),
-                        NombreDestinatario = reader.GetString(1),
-                        FechaCreacion = reader.GetDateTime(2)
-                    };
-                    presupuestos.Add(presupuesto);
-                }
+                    IdPresupuesto = idPresupuesto,
+                    NombreDestinatario = reader.GetString(1),
+                    FechaCreacion = reader.GetDateTime(2),
+                    Detalle = new List<PresupuestoDetalle>()
+
+                };
             }
+
+            //Si hay detalle agrego el detalle
+            if (!reader.IsDBNull(3))
+            {
+                var producto = new Productos
+                {
+                    IdProducto = reader.GetInt32(3),
+                    Descripcion = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Precio = reader.IsDBNull(6) ? 0 : reader.GetDecimal(6)
+
+                };
+
+                var detalle = new PresupuestoDetalle
+                {
+                    Producto = producto,
+                    Cantidad = reader.IsDBNull(4) ? 0 : reader.GetInt32(4)
+                };
+
+                presupuestos[idPresupuesto].Detalle.Add(detalle);
+            }
+
         }
 
-        return presupuestos;
+
+            //presupuestos es una coleccion de objetos presupuestos, todavia no es una lista, el Valuues agarra la parte del valor, y 
+            // ToList para convertirlo en lista
+        return presupuestos.Values.ToList();
     }
 
     public Presupuestos GetPresupuesto(int idPresupuesto)
     {
+        Presupuestos presupuesto = null;
+
         using var conexion = new SqliteConnection(connectionString);
         conexion.Open();
 
-        string sql = "SELECT idPresupuesto, nombreDestinatario, FechaCreacion FROM Presupuestos WHERE idPresupuesto = @idPresupuesto";
-        using var comando = new SqliteCommand(sql, conexion);
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
+        string sql = "SELECT * FROM Presupuestos LEFT JOIN PresupuestosDetalle using (idPresupuesto) LEFT JOIN Productos using (idProducto) WHERE idPresupuesto = @idPresupuesto";
 
-        using var lector = comando.ExecuteReader();
+        using var command = new SqliteCommand(sql, conexion);
+        command.Parameters.AddWithValue("@idPresupuesto", idPresupuesto);
 
-        if (lector.Read())
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
         {
-            var presupuesto = new Presupuestos
+            if (presupuesto == null)
             {
-                IdPresupuesto = lector.GetInt32(0),
-                NombreDestinatario = lector.GetString(1),
-                FechaCreacion = lector.GetDateTime(2)
-            };
+                presupuesto = new Presupuestos
+                {
+                    IdPresupuesto = reader.GetInt32(0),
+                    NombreDestinatario = reader.GetString(1),
+                    FechaCreacion = reader.GetDateTime(2),
+                    Detalle = new List<PresupuestoDetalle>()
+                };
+            }
 
-            var detalles = GetDetallesPorPresupuesto(idPresupuesto);
+            if (!reader.IsDBNull(3))
+            {
+                var producto = new Productos
+                {
+                    IdProducto = reader.GetInt32(3),
+                    Descripcion = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Precio = reader.IsDBNull(6) ? 0 : reader.GetDecimal(6)
+                };
 
-            presupuesto.Detalle = detalles;
+                var detalle = new PresupuestoDetalle
+                {
+                    Producto = producto,
+                    Cantidad = reader.IsDBNull(4) ? 0 : reader.GetInt32(4)
+                };
 
-            return presupuesto;
+                presupuesto.Detalle.Add(detalle);
+            }
         }
 
-        return null;
+        return presupuesto;
     }
 
     public void InsertarPresupuesto(Presupuestos nuevo)
@@ -128,37 +175,5 @@ public class PresupuestosRepository
 
 
     //METODOS PRIVADOS
-    private List<PresupuestoDetalle> GetDetallesPorPresupuesto(int idPresupuesto)
-    {
-        List<PresupuestoDetalle> detalles = new List<PresupuestoDetalle>();
-
-        using var conexion = new SqliteConnection(connectionString);
-        conexion.Open();
-
-        string sql = "SELECT idProducto, Cantidad FROM PresupuestoDetalle WHERE idPresupuesto = @idPresupuesto";
-        using var comando = new SqliteCommand(sql, conexion);
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
-
-        using var lector = comando.ExecuteReader();
-
-        var productoRepo = new ProductosRepository();
-
-        while (lector.Read())
-        {
-            int idProducto = lector.GetInt32(1);
-            int cantidad = lector.GetInt32(2);
-
-            Productos producto = productoRepo.GetProducto(idProducto);
-
-            var detalle = new PresupuestoDetalle
-            {
-                Producto = producto,
-                Cantidad = cantidad
-            };
-
-            detalles.Add(detalle);
-        }
-
-        return detalles;
-    }
+  
 }

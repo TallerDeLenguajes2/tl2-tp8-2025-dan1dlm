@@ -2,7 +2,45 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model List<Presupuestos>
+
 <div class="text-center">
-    <h1 class="display-4">Presupuestos</h1>
+    <h2>Presupuestos</h2>
+
+@foreach (var p in Model)
+{
+        <div class="presupuesto">
+            <h3>Presupuesto #@(p.IdPresupuesto + 1) - @p.NombreDestinatario</h3>
+            <p><b>Fecha:</b> @p.FechaCreacion.ToShortDateString()</p>
+
+            <table class="table table-sm table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detalle in p.Detalle)
+                    {
+                        <tr>
+                            <td>@detalle.Producto.Descripcion</td>
+                            <td>@detalle.Producto.Precio.ToString("C", new System.Globalization.CultureInfo("es-AR"))</td>
+                            <td>@p.cantidadProductos()</td>
+                            <td>@p.montoPresupuesto().ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p><b>Total del Presupuesto (IVA):</b>
+                @p.montoPresupuestoConIVA().ToString("C")
+        </p>
+    </div>
+
+    <hr />
+    }
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
