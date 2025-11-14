@@ -5,8 +5,11 @@
 @model List<Productos>
 
 <div class="text-center">
-    <h1 class="display-4">Productos</h1>
-    <table>
+    <h1 class="display-5">Productos</h1>
+
+    <a class="text-primary border border-primary p-2 d-inline rounded m-2 text-decoration-none" asp-controller="Productos" asp-action="AgregarProducto">Agregar Producto</a>
+    <a class="text-danger border border-danger p-2 d-inline rounded m-2 text-decoration-none">Eliminar Producto</a>
+    <table class = "table m-4">
         <thead>
             <tr>
                 <th>ID</th>

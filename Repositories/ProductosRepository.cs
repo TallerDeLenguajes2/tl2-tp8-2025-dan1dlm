@@ -55,18 +55,17 @@ public class ProductosRepository
       return null;
     }
 
-    public void insertarProducto(Productos productoNuevo){
-        using var conexion = new SqliteConnection(connectionString);
-        conexion.Open();
+    public int Create(Productos productoNuevo){
+         string query = "INSERT INTO Productos(Descripcion, Precio) VALUES(@descripcion, @precio)";
+        using var conecction = new SqliteConnection(connectionString);
+        conecction.Open();
 
-        string sql = "INSERT INTO Productos (idProducto, Descripcion, Precio) VALUES (@idProducto, @Descripcion, @Precio)";
-        using var comando = new SqliteCommand(sql, conexion);
-
-        comando.Parameters.Add(new SqliteParameter("@idProducto", productoNuevo.IdProducto));
-        comando.Parameters.Add(new SqliteParameter("@Descripcion", productoNuevo.Descripcion));
-        comando.Parameters.Add(new SqliteParameter("@Precio", productoNuevo.Precio));
-
-        comando.ExecuteNonQuery();
+        var command = new SqliteCommand(query, conecction);
+        command.Parameters.Add(new SqliteParameter("@descripcion", productoNuevo.Descripcion));
+        command.Parameters.Add(new SqliteParameter("@precio", productoNuevo.Precio));
+        int filas = command.ExecuteNonQuery();
+        conecction.Close();
+        return filas;
     }
 
     public void eliminarProducto(int idEliminar){
@@ -80,17 +79,18 @@ public class ProductosRepository
         comando.ExecuteNonQuery();
     }
 
-    public void ActualizarProducto(int idProducto, decimal nuevoPrecio){
-        using var conexion = new SqliteConnection(connectionString);
-        conexion.Open();
+    public int Update(Productos producto){
+        string query = "UPDATE Productos SET Descripcion = @descripcion, Precio = @precio WHERE idProducto = @id";
+        using var conecction = new SqliteConnection(connectionString);
+        conecction.Open();
 
-        string sql = "UPDATE Productos SET Precio = @Precio WHERE idProducto = @idProducto";
-        using var comando = new SqliteCommand(sql, conexion);
-
-        comando.Parameters.Add(new SqliteParameter("@Precio", nuevoPrecio));
-        comando.Parameters.Add(new SqliteParameter("@idProducto", idProducto));
-
-        comando.ExecuteNonQuery();
+        var command = new SqliteCommand(query, conecction);
+        command.Parameters.Add(new SqliteParameter("@id", producto.IdProducto));
+        command.Parameters.Add(new SqliteParameter("@descripcion", producto.Descripcion));
+        command.Parameters.Add(new SqliteParameter("@precio", producto.Precio));
+        int filas = command.ExecuteNonQuery();
+        conecction.Close();
+        return filas;
     }
 
 

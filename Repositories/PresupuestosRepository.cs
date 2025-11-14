@@ -126,9 +126,7 @@ public class PresupuestosRepository
     public void AgregarProductoAPresupuesto(int idPresupuesto, Productos producto, int cantidad)
     {
         // Verificar que el presupuesto exista
-        var presupuesto = GetPresupuesto(idPresupuesto);
-        if (presupuesto == null)
-            throw new Exception($"No existe un presupuesto con el ID {idPresupuesto}");
+        var presupuesto = GetPresupuesto(idPresupuesto) ?? throw new Exception($"No existe un presupuesto con el ID {idPresupuesto}");
 
         // Reutilizar el repositorio de detalle
         using var conexion = new SqliteConnection(connectionString);

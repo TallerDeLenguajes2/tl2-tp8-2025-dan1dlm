@@ -5,15 +5,17 @@
 @model List<Presupuestos>
 
 <div class="text-center">
-    <h2>Presupuestos</h2>
+    <h2 class="p-2 display-5">Presupuestos</h2>
+    <a class="text-primary border border-primary p-2 d-inline rounded m-2" >Agregar Presupuesto</a>
+    <a class="text-danger border border-danger p-2 d-inline rounded m-2">Eliminar Presupuesto</a>
 
 @foreach (var p in Model)
 {
         <div class="presupuesto">
-            <h3>Presupuesto #@(p.IdPresupuesto + 1) - @p.NombreDestinatario</h3>
+            <h3 class = "mt-4">Presupuesto #@(p.IdPresupuesto + 1) - @p.NombreDestinatario</h3>
             <p><b>Fecha:</b> @p.FechaCreacion.ToShortDateString()</p>
 
-            <table class="table table-sm table-bordered mt-2">
+            <table class="table table-sm table-bordered mt-4">
                 <thead>
                     <tr>
                         <th>Producto</th>
