@@ -54,8 +54,8 @@ public class PresupuestosRepository
         }
 
 
-            //presupuestos es una coleccion de objetos presupuestos, todavia no es una lista, el Valuues agarra la parte del valor, y 
-            // ToList para convertirlo en lista
+        //presupuestos es una coleccion de objetos presupuestos, todavia no es una lista, el Valuues agarra la parte del valor, y 
+        // ToList para convertirlo en lista
         return presupuestos.Values.ToList();
     }
 
@@ -173,5 +173,5 @@ public class PresupuestosRepository
 
 
     //METODOS PRIVADOS
-  
+
 }
