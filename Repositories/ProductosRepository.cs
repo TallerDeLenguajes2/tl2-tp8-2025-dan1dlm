@@ -1,6 +1,9 @@
+using tl2_tp8_2025_dan1dlm.Models;
 using Microsoft.Data.Sqlite;
+using tl2_tp8_2025_dan1dlm.Interfaces;
+namespace tl2_tp8_2025_dan1dlm.Repositories;
 
-public class ProductosRepository
+public class ProductosRepository : IProductosRepository
 {
     string connectionString = "Data Source=Db/Tienda.db";
     public List<Productos> GetProductos()
@@ -17,15 +20,15 @@ public class ProductosRepository
                 {
                     Productos producto = new Productos
                     {
-                        IdProducto = reader.GetInt32(0),             
-                        Descripcion = reader.GetString(1),              
+                        IdProducto = reader.GetInt32(0),
+                        Descripcion = reader.GetString(1),
                         Precio = reader.GetDecimal(2)
-                    };                 
+                    };
 
                     productos.Add(producto);
                 }
             }
-            connection.Close();
+       
         }
 
         return productos;
@@ -33,30 +36,33 @@ public class ProductosRepository
 
     public Productos GetProducto(int idProducto)
     {
-      using var conexion = new SqliteConnection(connectionString);
-      conexion.Open();
+        using var conexion = new SqliteConnection(connectionString);
+        conexion.Open();
 
-      string sql = "SELECT idProducto, Descripcion, Precio FROM Productos WHERE idProducto = @idProducto";
-      using var comando = new SqliteCommand(sql, conexion);
-      comando.Parameters.Add(new SqliteParameter("@idProducto", idProducto));
+        string sql = "SELECT idProducto, Descripcion, Precio FROM Productos WHERE idProducto = @idProducto";
+        using var comando = new SqliteCommand(sql, conexion);
+        comando.Parameters.Add(new SqliteParameter("@idProducto", idProducto));
 
-      using var lector = comando.ExecuteReader();
+        using var lector = comando.ExecuteReader();
 
-      if(lector.Read()){
-        var producto = new Productos {
-            IdProducto = lector.GetInt32(0),
-            Descripcion = lector.GetString(1),
-            Precio = lector.GetDecimal(2)
-        };
+        if (lector.Read())
+        {
+            var producto = new Productos
+            {
+                IdProducto = lector.GetInt32(0),
+                Descripcion = lector.GetString(1),
+                Precio = lector.GetDecimal(2)
+            };
 
-        return producto;
-      } 
+            return producto;
+        }
 
-      return null;
+        return null;
     }
 
-    public int Create(Productos productoNuevo){
-         string query = "INSERT INTO Productos(Descripcion, Precio) VALUES(@descripcion, @precio)";
+    public int Create(Productos productoNuevo)
+    {
+        string query = "INSERT INTO Productos(Descripcion, Precio) VALUES(@descripcion, @precio)";
         using var conecction = new SqliteConnection(connectionString);
         conecction.Open();
 
@@ -68,18 +74,9 @@ public class ProductosRepository
         return filas;
     }
 
-    public void eliminarProducto(int idEliminar){
-        using var conexion = new SqliteConnection(connectionString);
-        conexion.Open();
 
-        string sql = "DELETE FROM Productos WHERE idProducto = @idEliminar";
-        using var comando = new SqliteCommand(sql, conexion);
-
-        comando.Parameters.Add(new SqliteParameter("@idProducto", idEliminar));
-        comando.ExecuteNonQuery();
-    }
-
-    public int Update(Productos producto){
+    public int Update(Productos producto)
+    {
         string query = "UPDATE Productos SET Descripcion = @descripcion, Precio = @precio WHERE idProducto = @id";
         using var conecction = new SqliteConnection(connectionString);
         conecction.Open();
@@ -93,5 +90,16 @@ public class ProductosRepository
         return filas;
     }
 
+    public void Delete(int idEliminar)
+    {
+        using var conexion = new SqliteConnection(connectionString);
+        conexion.Open();
+
+        string sql = "DELETE FROM Productos WHERE idProducto = @idEliminar";
+        using var comando = new SqliteCommand(sql, conexion);
+
+        comando.Parameters.Add(new SqliteParameter("@idEliminar", idEliminar));
+        comando.ExecuteNonQuery();
+    }
 
 }

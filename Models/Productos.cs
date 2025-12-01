@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using SistemaVentas.Web.ViewModels;
 
+namespace tl2_tp8_2025_dan1dlm.Models;
 public class Productos{
     private int idProducto;
     private string descripcion;

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace SistemaVentas.Web.ViewModels
+namespace tl2_tp8_2025_dan1dlm.ViewModels
 {
     public class PresupuestosViewModel
     {

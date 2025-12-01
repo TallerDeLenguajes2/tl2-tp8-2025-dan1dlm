@@ -1,6 +1,8 @@
+using tl2_tp8_2025_dan1dlm.Interfaces;
+using tl2_tp8_2025_dan1dlm.Models;
 using Microsoft.Data.Sqlite;
-
-public class PresupuestosRepository
+namespace tl2_tp8_2025_dan1dlm.Repositories;
+public class PresupuestosRepository : IPresupuestosRepository
 {
     string connectionString = "Data Source=db/Tienda.db";
 
@@ -108,22 +110,23 @@ public class PresupuestosRepository
         return presupuesto;
     }
 
-    public void InsertarPresupuesto(Presupuestos nuevo)
+    public int Create(Presupuestos nuevo)
     {
         using var conexion = new SqliteConnection(connectionString);
         conexion.Open();
 
         string sql = "INSERT INTO Presupuestos (idPresupuesto, nombreDestinatario, FechaCreacion) VALUES (@idPresupuesto, @nombreDestinatario, @fechaCreacion)";
-        using var comando = new SqliteCommand(sql, conexion);
+        using var command = new SqliteCommand(sql, conexion);
 
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", nuevo.IdPresupuesto));
-        comando.Parameters.Add(new SqliteParameter("@nombreDestinatario", nuevo.NombreDestinatario));
-        comando.Parameters.Add(new SqliteParameter("@fechaCreacion", nuevo.FechaCreacion));
+        command.Parameters.Add(new SqliteParameter("@idPresupuesto", nuevo.IdPresupuesto));
+        command.Parameters.Add(new SqliteParameter("@nombreDestinatario", nuevo.NombreDestinatario));
+        command.Parameters.Add(new SqliteParameter("@fechaCreacion", nuevo.FechaCreacion));
+        int rows = command.ExecuteNonQuery();
 
-        comando.ExecuteNonQuery();
+        return rows;
     }
 
-    public void AgregarProductoAPresupuesto(int idPresupuesto, Productos producto, int cantidad)
+    public int AddProduct(int idPresupuesto, Productos producto, int cantidad)
     {
         // Verificar que el presupuesto exista
         var presupuesto = GetPresupuesto(idPresupuesto) ?? throw new Exception($"No existe un presupuesto con el ID {idPresupuesto}");
@@ -136,40 +139,45 @@ public class PresupuestosRepository
         string sql = @"INSERT INTO PresupuestoDetalle (idPresupuesto, idProducto, Cantidad)
                         VALUES (@idPresupuesto, @idProducto, @Cantidad)";
 
-        using var comando = new SqliteCommand(sql, conexion);
+        using var command = new SqliteCommand(sql, conexion);
 
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
-        comando.Parameters.Add(new SqliteParameter("@idProducto", producto.IdProducto));
-        comando.Parameters.Add(new SqliteParameter("@Cantidad", cantidad));
+        command.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
+        command.Parameters.Add(new SqliteParameter("@idProducto", producto.IdProducto));
+        command.Parameters.Add(new SqliteParameter("@Cantidad", cantidad));
 
-        comando.ExecuteNonQuery(); //para actualizar la BD
+        int rows = command.ExecuteNonQuery(); 
+
+        return rows;
     }
 
-    public void EliminarPresupuesto(int idEliminar)
+    public int Update(int idPresupuesto, Presupuestos nuevoPresupuesto)
+    {
+        using var conexion = new SqliteConnection(connectionString);
+        conexion.Open();
+
+        string sql = "UPDATE Presupuestos SET NombreDestinatario = @NombreDestinatario, FechaCreacion = @FechaCreacion WHERE idPresupuesto = @idPresupuesto";
+        using var command = new SqliteCommand(sql, conexion);
+
+        command.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
+        command.Parameters.Add(new SqliteParameter("@FechaCreacion", nuevoPresupuesto.FechaCreacion));
+        command.Parameters.Add(new SqliteParameter("@NombreDestinatario", nuevoPresupuesto.NombreDestinatario));
+
+        int rows = command.ExecuteNonQuery();
+
+        return rows;
+    }
+    public void Delete(int idEliminar)
     {
         using var conexion = new SqliteConnection(connectionString);
         conexion.Open();
 
         string sql = "DELETE FROM Presupuestos WHERE idPresupuesto = @idPresupuesto";
-        using var comando = new SqliteCommand(sql, conexion);
+        using var command = new SqliteCommand(sql, conexion);
 
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", idEliminar));
-        comando.ExecuteNonQuery();
+        command.Parameters.Add(new SqliteParameter("@idPresupuesto", idEliminar));
+        command.ExecuteNonQuery();
     }
 
-    public void ActualizarPresupuesto(int idPresupuesto, string nuevoNombreDestinatario)
-    {
-        using var conexion = new SqliteConnection(connectionString);
-        conexion.Open();
-
-        string sql = "UPDATE Presupuestos SET nombreDestinatario = @nombreDestinatario WHERE idPresupuesto = @idPresupuesto";
-        using var comando = new SqliteCommand(sql, conexion);
-
-        comando.Parameters.Add(new SqliteParameter("@nombreDestinatario", nuevoNombreDestinatario));
-        comando.Parameters.Add(new SqliteParameter("@idPresupuesto", idPresupuesto));
-
-        comando.ExecuteNonQuery();
-    }
 
 
     //METODOS PRIVADOS
