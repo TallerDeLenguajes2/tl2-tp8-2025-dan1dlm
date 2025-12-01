@@ -1,18 +1,20 @@
 using tl2_tp8_2025_dan1dlm.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using tl2_tp8_2025_dan1dlm.ViewModels;
-public class LogginController : Controller
+public class LoginController : Controller
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public LogginController(IAuthenticationService authenticationService)
+    public LoginController(IAuthenticationService authenticationService)
     {
         _authenticationService = authenticationService;
     }
     // [HttpGet] Muestra la vista de login
     public IActionResult Index()
     {
-        // ... (Crear LoginViewModel)
+        if (_authenticationService.IsAuthenticated())
+            return RedirectToAction("Index", "Home");
+
         return View(new LoginViewModel());
     }
     // [HttpPost] Procesa el login

@@ -10,26 +10,26 @@ public class ProductosRepository : IProductosRepository
     {
         string queryString = "SELECT * FROM Productos";
         List<Productos> productos = new List<Productos>();
-        using (SqliteConnection connection = new SqliteConnection(connectionString))
-        {
-            SqliteCommand command = new SqliteCommand(queryString, connection);
-            connection.Open();
-            using (SqliteDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Productos producto = new Productos
-                    {
-                        IdProducto = reader.GetInt32(0),
-                        Descripcion = reader.GetString(1),
-                        Precio = reader.GetDecimal(2)
-                    };
+        using var conecction = new SqliteConnection(connectionString);
+        conecction.Open();
 
-                    productos.Add(producto);
-                }
+        var command = new SqliteCommand(queryString, conecction);
+
+        using (SqliteDataReader reader = command.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                var producto = new Productos
+                {
+                    IdProducto = reader.GetInt32(0),
+                    Descripcion = reader.GetString(1),
+                    Precio = reader.GetDecimal(2)
+                };
+                productos.Add(producto);
             }
-       
         }
+        
+    //no hace falta conecction.Close(), porque se está usando using var conecction = new SqliteConnection(connectionString); que garantiza que la conexión se cierre y libere automáticamente al finalizar el bloque donde está declarada.
 
         return productos;
     }
@@ -43,15 +43,15 @@ public class ProductosRepository : IProductosRepository
         using var comando = new SqliteCommand(sql, conexion);
         comando.Parameters.Add(new SqliteParameter("@idProducto", idProducto));
 
-        using var lector = comando.ExecuteReader();
+        using var reader = comando.ExecuteReader();
 
-        if (lector.Read())
+        if (reader.Read())
         {
             var producto = new Productos
             {
-                IdProducto = lector.GetInt32(0),
-                Descripcion = lector.GetString(1),
-                Precio = lector.GetDecimal(2)
+                IdProducto = reader.GetInt32(0),
+                Descripcion = reader.GetString(1),
+                Precio = reader.GetDecimal(2)
             };
 
             return producto;

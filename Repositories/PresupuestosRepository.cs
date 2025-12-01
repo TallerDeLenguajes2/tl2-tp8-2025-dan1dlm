@@ -110,6 +110,35 @@ public class PresupuestosRepository : IPresupuestosRepository
         return presupuesto;
     }
 
+//     public Presupuestos GetPresupuesto(int idPresupuesto)
+// {
+//     Presupuestos presupuesto = null;
+
+//     using var conexion = new SqliteConnection(connectionString);
+//     conexion.Open();
+
+//     string sql = "SELECT idPresupuesto, NombreDestinatario, FechaCreacion FROM Presupuestos WHERE idPresupuesto = @idPresupuesto";
+
+//     using var command = new SqliteCommand(sql, conexion);
+//     command.Parameters.AddWithValue("@idPresupuesto", idPresupuesto);
+
+//     using var reader = command.ExecuteReader();
+
+//     if (reader.Read())
+//     {
+//         presupuesto = new Presupuestos
+//         {
+//             IdPresupuesto = reader.GetInt32(0),
+//             NombreDestinatario = reader.GetString(1),
+//             FechaCreacion = reader.GetDateTime(2),
+//             // No inicializamos detalle porque no lo cargamos aquí
+//             Detalle = new List<PresupuestoDetalle>() 
+//         };
+//     }
+
+//     return presupuesto;
+// }
+
     public int Create(Presupuestos nuevo)
     {
         using var conexion = new SqliteConnection(connectionString);
@@ -180,6 +209,6 @@ public class PresupuestosRepository : IPresupuestosRepository
 
 
 
-    //METODOS PRIVADOS
+   
 
 }

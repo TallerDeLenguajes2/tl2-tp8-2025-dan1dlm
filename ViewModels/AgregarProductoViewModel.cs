@@ -21,6 +21,8 @@ namespace SistemaVentas.Web.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a cero")]
         public int Cantidad { get; set; }
 
+        public AgregarProductoViewModel(){}
+
         
         //Lista para el DropDown
         public SelectList ListaProductos { get; set; }

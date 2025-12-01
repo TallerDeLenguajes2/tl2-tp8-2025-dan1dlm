@@ -44,6 +44,6 @@ app.UseAuthorization(); // Necesario si usa atributos, aunque aquí lo haremos m
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();
